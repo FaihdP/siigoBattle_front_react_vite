@@ -1,30 +1,31 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../../../context/Context";
+import Card from "./Card";
 
 function Party() {
-  const { socket, user, setUser } = useContext(Context)
-  const [cards, setCards] = useState([])
+  const { socket, user, setCard } = useContext(Context);
 
-  useEffect(() => {
-    socket.emit("client: getUsersCards", user.codeRoom)
-    socket.on("server: updateUsersCards", usersCards => {
-      setCards(usersCards.find(userCards => userCards.id == user.id).cards)
-      setUser({...user, cards: cards})
-    });
-    return () => socket.off("server: getCards");
-  }, [])
+  const getCard = () => {
+    socket.emit("client: getCard", user.id);
+    socket.on("server: updateCard", (card) => setCard(card));
+    return () => socket.off("server: updateCard")
+  };
 
-  console.log(cards)
-
-  if (cards.length > 0) {
-    return cards.map((card, index) => 
-      <div key={index}>
-        {card}
-      </div>
-    )
+  const nextCard = () => {
+    socket.emit("client: nextCard", user.id)
+    socket.on("client: nextCard-finish", () => getCard())
   }
 
-  return <>Dealing cards...</>
+  useEffect(() => {
+    getCard()
+  }, [])
+
+  return (
+    <>
+      <Card></Card><br/>
+      <button onClick={nextCard}>Next card</button>
+    </>
+  );
 }
 
 export default Party;
