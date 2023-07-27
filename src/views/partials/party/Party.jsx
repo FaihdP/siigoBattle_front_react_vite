@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../../context/Context";
 import Card from "./Card";
 
 function Party() {
-  const { socket, user, setCard } = useContext(Context);
+  const { socket, user, setCard, setAllowChoose } = useContext(Context);
 
   const getCard = () => {
     socket.emit("client: getCard", user.id);
@@ -17,8 +17,12 @@ function Party() {
   }
 
   useEffect(() => {
+    socket.emit("client: startParty-finish", user.codeRoom)
+    socket.on("client: chooserUser", (userId) => {
+      if (userId === user.id) setAllowChoose(true)
+    })
     getCard()
-  }, [])
+  }, [user, socket])
 
   return (
     <>

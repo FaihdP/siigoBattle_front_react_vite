@@ -10,6 +10,7 @@ export function ContextProvider({ children }) {
   let [user, setUser] = useState(new User());
   const [socket, setSocket] = useState(connectionSocket);
   const [usersRoom, setUsersRoom] = useState([]);
+  const [allowChoose, setAllowChoose] = useState(false);
   const [card, setCard] = useState(null);
   
   if (!user.id) user.id = sessionStorage.getItem("id");
@@ -28,7 +29,9 @@ export function ContextProvider({ children }) {
         socket,
         setSocket,
         card,
-        setCard
+        setCard,
+        allowChoose,
+        setAllowChoose
       }}
     >
       {children}
