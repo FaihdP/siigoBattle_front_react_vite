@@ -3,7 +3,7 @@ import { Context } from "../../context/Context";
 import AfterParty from "../partials/party/AfterParty";
 import BeforeParty from "../partials/party/BeforeParty";
 import OverParty from "../partials/party/OverParty";
-import StatesParty from "../../logic/enums/StatesParty";
+import { StatesParty } from "../../logic/enums/Enums";
 
 function PartyHeader({ children, stateParty }) {
   const { socket, user } = useContext(Context);
@@ -31,10 +31,10 @@ function PartyHeader({ children, stateParty }) {
   }
 
   return (
-    <div>
-      {component}
-      <div>{children}</div>
-    </div>
+    <>
+      <header>{component}</header>
+      <main>{children}</main>
+    </>
   );
 }
 

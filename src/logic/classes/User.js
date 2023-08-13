@@ -6,5 +6,6 @@ export default class User {
     this.isOwner = isOwner || null
     this.cards = []
     this.entryOrder = entryOrder || null
+    this.cardsWon = []
   }
 }

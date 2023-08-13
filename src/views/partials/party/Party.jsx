@@ -1,33 +1,57 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { Context } from "../../../context/Context";
 import Card from "./Card";
 
 function Party() {
-  const { socket, user, setCard, setAllowChoose } = useContext(Context);
+  const { socket, user, setCard, allowChoose, setAllowChoose, setUser } = useContext(Context);
 
-  const getCard = () => {
+  const getCard = useCallback(() => {
     socket.emit("client: getCard", user.id);
     socket.on("server: updateCard", (card) => setCard(card));
-    return () => socket.off("server: updateCard")
-  };
+  }, [socket, setCard, user.id]);
+  
+  useEffect(() => {
+    if (allowChoose === null && user.isOwner) 
+      console.log('xd')
+      socket.emit("client: getFirstChooser", user.codeRoom)
 
-  const nextCard = () => {
-    socket.emit("client: nextCard", user.id)
-    socket.on("client: nextCard-finish", () => getCard())
-  }
+    getCard()
+  }, [user, socket, allowChoose, getCard])
 
   useEffect(() => {
-    socket.emit("client: startParty-finish", user.codeRoom)
-    socket.on("client: chooserUser", (userId) => {
-      if (userId === user.id) setAllowChoose(true)
+    socket.on("server: chooserUser", (userId) => {
+      console.log(userId)
+      console.log(user.id)
+      setAllowChoose(userId === user.id ? true : false)
     })
-    getCard()
-  }, [user, socket])
+
+    return () => socket.off("server: chooserUser")
+  }, [setAllowChoose, socket, user.id])
+  
+  useEffect(() => {
+    const nextCard = () => {
+      socket.emit("client: nextCard", user.id)
+      socket.on("client: nextCard-finish", getCard())
+    }
+
+    const handleWinnerRound = (message) => {
+      let victoryMessage = "Ha ganado " + message.user.name
+      if (message.user.id === user.id) {
+        victoryMessage = "Has ganado este round!"
+        setUser((prevUser) => ({...prevUser, cardsWon: message.cardsWon}))
+      }
+      alert(victoryMessage)
+      nextCard()
+    }
+
+    socket.on("server: winnerRound", (message) => handleWinnerRound(message))
+
+    return () => socket.off("server: winnerRound")
+  }, [socket, setUser, user.id, getCard])
 
   return (
     <>
-      <Card></Card><br/>
-      <button onClick={nextCard}>Next card</button>
+      <Card></Card>
     </>
   );
 }

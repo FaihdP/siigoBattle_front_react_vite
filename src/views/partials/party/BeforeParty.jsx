@@ -19,7 +19,7 @@ function BeforeParty() {
   }, [navigate, socket, setUsersRoom]);
 
   return (
-    <div>
+    <>
       <h1>Siigo Match Battle</h1>
       User name: <b>{user.name}</b>
       <br />
@@ -27,7 +27,7 @@ function BeforeParty() {
       <br />
       <br />
       <Button numberUsers={usersRoom.length}/>
-    </div>
+    </>
   );
 }
 

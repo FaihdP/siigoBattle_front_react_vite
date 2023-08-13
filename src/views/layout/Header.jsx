@@ -14,11 +14,13 @@ function Header({ children }) {
 
   return (
     <>
-      <div>
+      <header>
         <h1>Siigo Match Battle</h1>
         <span>User: <b>{user.name && user.name !== "" ? user.name : "Enter your user name"}</b></span>
-      </div>
-      {children}
+      </header>
+      <main>
+        {children}
+      </main>
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { Context } from "../../../context/Context";
-import { Link } from "react-router-dom";
 
 function Button({ numberUsers }) {
   const { user, socket } = useContext(Context);
@@ -15,7 +14,7 @@ function Button({ numberUsers }) {
     </button>
   );
 
-  if (numberUsers > 1) return <Link to="/party">{Button}</Link>;
+  if (numberUsers > 1) return Button;
   else return <button disabled>Waiting players...</button>;
 }
 
