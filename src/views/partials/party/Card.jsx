@@ -14,7 +14,7 @@ function Card() {
   return (
     <>
       <br />
-      {allowChoose ? <div style={{display: "block"}}>You choose!</div> : ""}
+      {allowChoose && <div style={{display: "block"}}>You choose!</div>}
       <br />
       <div style={{background: 'rgb(32, 35, 37)', display: "inline-block"}}>
         <div>Codigo: {card.code}</div>

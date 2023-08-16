@@ -12,7 +12,6 @@ function Party() {
   
   useEffect(() => {
     if (allowChoose === null && user.isOwner) 
-      console.log('xd')
       socket.emit("client: getFirstChooser", user.codeRoom)
 
     getCard()
@@ -20,8 +19,6 @@ function Party() {
 
   useEffect(() => {
     socket.on("server: chooserUser", (userId) => {
-      console.log(userId)
-      console.log(user.id)
       setAllowChoose(userId === user.id ? true : false)
     })
 
@@ -35,7 +32,7 @@ function Party() {
     }
 
     const handleWinnerRound = (message) => {
-      let victoryMessage = "Ha ganado " + message.user.name
+      let victoryMessage = "Ha ganado " + message.user?.name
       if (message.user.id === user.id) {
         victoryMessage = "Has ganado este round!"
         setUser((prevUser) => ({...prevUser, cardsWon: message.cardsWon}))

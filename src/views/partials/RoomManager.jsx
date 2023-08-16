@@ -10,7 +10,7 @@ function RoomManager() {
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    setUser((prevUser) => ({...prevUser, codeRoom: e.target.value}));
+    setUser((prevUser) => ({...prevUser, isOwner: false, codeRoom: e.target.value}));
   }
 
   const handleCreateParty = () => {
@@ -46,11 +46,12 @@ function RoomManager() {
 
       if (connection.status === RoomConnectionStatus.SUCCESSFUL) {
         setUser((prevUser) => ({...prevUser, isOwner: false, entryOrder: connection.playersNumber}));
+        console.log(connection)
 
         sessionStorage.setItem("isOwner", false);
         sessionStorage.setItem("entryOrder", connection.playersNumber);
         sessionStorage.setItem("codeRoom", user.codeRoom);
-        
+
         navigate("/room");
       }
     });
