@@ -9,29 +9,38 @@ function Party() {
     socket.emit("client: getCard", user.id);
     socket.on("server: updateCard", (card) => setCard(card));
   }, [socket, setCard, user.id]);
+
+  const nextCard = useCallback(() => {
+    socket.emit("client: nextCard", user.id)
+    socket.on("client: nextCard-finish", getCard)
+  }, [socket, getCard, user.id]);
   
   useEffect(() => {
-    if (allowChoose === null && user.isOwner) 
-      socket.emit("client: getFirstChooser", user.codeRoom)
+    if (user.isOwner && allowChoose === null) socket.emit("client: getFirstChooser", user.codeRoom)
 
     getCard()
+
+    return () => {
+      socket.off("server: updateCard");
+    }
   }, [user, socket, allowChoose, getCard])
 
   useEffect(() => {
-    socket.on("server: chooserUser", (userId) => {
-      setAllowChoose(userId === user.id ? true : false)
-    })
+    const onChooserUser = (nextUserId) => {
+      const chooserUser = nextUserId === user.id ? true : false 
+      setAllowChoose(chooserUser)
+      sessionStorage.setItem("allowChoose", chooserUser)
+    }
+    
+    socket.on("server: chooserUser", onChooserUser)
 
-    return () => socket.off("server: chooserUser")
+    return () => {
+      socket.off("server: chooserUser");
+    }
   }, [setAllowChoose, socket, user.id])
   
   useEffect(() => {
-    const nextCard = () => {
-      socket.emit("client: nextCard", user.id)
-      socket.on("client: nextCard-finish", getCard())
-    }
-
-    const handleWinnerRound = (message) => {
+    const onWinnerRound = (message) => {
       let victoryMessage = "Ha ganado " + message.user?.name
       if (message.user.id === user.id) {
         victoryMessage = "Has ganado este round!"
@@ -41,10 +50,13 @@ function Party() {
       nextCard()
     }
 
-    socket.on("server: winnerRound", (message) => handleWinnerRound(message))
+    socket.on("server: winnerRound", onWinnerRound)
 
-    return () => socket.off("server: winnerRound")
-  }, [socket, setUser, user.id, getCard])
+    return () => {
+      socket.off("server: winnerRound");
+      socket.off("server: nextCard-finish");
+    }
+  }, [socket, setUser, user.id, getCard, nextCard])
 
   return (
     <>

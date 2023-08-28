@@ -7,7 +7,7 @@ function Card() {
 
   if (!card) return <>Dealing cards...</>
 
-  function sendFeatureChoosed(feature) {
+  function emitFeatureChoosed(feature) {
     if (allowChoose) socket.emit("client: choosedFeature", {feature, userId: user.id})
   }
 
@@ -20,11 +20,11 @@ function Card() {
         <div>Codigo: {card.code}</div>
         <div>Nombre: {card.name}</div>
         <div>Img: {card.img}</div>
-        <div onClick={() => sendFeatureChoosed("cylinder")}>Cilindraje: {card.cylinder}</div>
-        <div onClick={() => sendFeatureChoosed("cylinders")}>Cilindros: {card.cylinders}</div>
-        <div onClick={() => sendFeatureChoosed("horsepower")}>Caballos de fuerza: {card.horsepower}</div>
-        <div onClick={() => sendFeatureChoosed("revolutions")}>Revoluciones: {card.revolutions}</div>
-        <div onClick={() => sendFeatureChoosed("weight")}>Peso: {card.weight}</div>
+        <div onClick={() => emitFeatureChoosed("cylinder")}>Cilindraje: {card.cylinder}</div>
+        <div onClick={() => emitFeatureChoosed("cylinders")}>Cilindros: {card.cylinders}</div>
+        <div onClick={() => emitFeatureChoosed("horsepower")}>Caballos de fuerza: {card.horsepower}</div>
+        <div onClick={() => emitFeatureChoosed("revolutions")}>Revoluciones: {card.revolutions}</div>
+        <div onClick={() => emitFeatureChoosed("weight")}>Peso: {card.weight}</div>
       </div>
     </>
   );

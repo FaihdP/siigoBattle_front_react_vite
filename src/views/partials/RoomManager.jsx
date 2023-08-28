@@ -46,7 +46,6 @@ function RoomManager() {
 
       if (connection.status === RoomConnectionStatus.SUCCESSFUL) {
         setUser((prevUser) => ({...prevUser, isOwner: false, entryOrder: connection.playersNumber}));
-        console.log(connection)
 
         sessionStorage.setItem("isOwner", false);
         sessionStorage.setItem("entryOrder", connection.playersNumber);
