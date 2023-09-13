@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Context } from "../../../context/Context";
 
-function Card() {
+function Card({ card }) {
 
-  const { card, allowChoose, socket, user } = useContext(Context);
+  const { allowChoose, socket, user } = useContext(Context);
 
-  if (!card) return <>Dealing cards...</>
+  //console.log(card);
 
   function emitFeatureChoosed(feature) {
     if (allowChoose) socket.emit("client: choosedFeature", {feature, userId: user.id})

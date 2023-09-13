@@ -13,10 +13,10 @@ function BeforeParty() {
   }, [navigate, socket]);
 
   useEffect(() => {
-    socket.emit("client: getUsersRoom");
-    socket.on("server: updateUsersRoom", usersRoom => setUsersRoom(usersRoom));
-    return () => socket.off("server: updateUsersRoom");
-  }, [navigate, socket, setUsersRoom]);
+    socket.emit("client: getUsersRoom", user.codeRoom);
+    socket.on("server: setUsersRoom", usersRoom => setUsersRoom(usersRoom));
+    return () => socket.off("server: setUsersRoom");
+  }, [navigate, socket, setUsersRoom, user]);
 
   return (
     <>

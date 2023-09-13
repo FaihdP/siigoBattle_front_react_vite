@@ -54,6 +54,8 @@ function RoomManager() {
         navigate("/room");
       }
     });
+ 
+    return () => {socket.off("server: infoConnection")}
   }, [setUser, socket, navigate, user.codeRoom]);
 
   return (
