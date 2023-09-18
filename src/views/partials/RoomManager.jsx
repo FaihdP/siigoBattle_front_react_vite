@@ -4,6 +4,7 @@ import randomHex from "../../logic/randomHEX";
 import { Link, useNavigate } from "react-router-dom";
 import User from "../../logic/classes/User";
 import { RoomConnectionStatus } from "../../logic/enums/Enums";
+import Button from "./Button";
 
 function RoomManager() {
   const { user, setUser, socket } = useContext(Context);
@@ -45,7 +46,15 @@ function RoomManager() {
         alert("The room is full");
 
       if (connection.status === RoomConnectionStatus.SUCCESSFUL) {
-        setUser((prevUser) => ({...prevUser, isOwner: false, entryOrder: connection.playersNumber}));
+        setUser(
+          (prevUser) => (
+            {
+              ...prevUser, 
+              isOwner: false, 
+              entryOrder: connection.playersNumber
+            }
+          )
+        );
 
         sessionStorage.setItem("isOwner", false);
         sessionStorage.setItem("entryOrder", connection.playersNumber);
@@ -55,31 +64,39 @@ function RoomManager() {
       }
     });
  
-    return () => {socket.off("server: infoConnection")}
+    return () => {
+      socket.off("server: infoConnection")
+    }
+
   }, [setUser, socket, navigate, user.codeRoom]);
 
   return (
-    <>
-      <section>
-        <h2>Create a new room</h2>
-        <Link to="/room">
-          <button onClick={handleCreateParty}>
-            Let{"'"}s go!
-          </button>
-        </Link>
-      </section>
-      <section>
-        <h2>Connect to room</h2>
-        <form onSubmit={handleConnectParty}>
-          <input
-            type="text"
-            placeholder="Code room"
-            onChange={handleInput}
-          />
-          <button type="submit">Let{"'"}s go!</button>
-        </form>
-      </section>
-    </>
+    <div className="grid lg:grid-cols-2 gap-8">
+      <div className="mx-auto">
+        <section>
+          <span className="block text-center font-extralight text-2xl">
+            Create a new room
+          </span>
+          <Link to="/room">
+            <Button text="Let's go!" type="submit" onClick={handleCreateParty}></Button>
+          </Link>
+        </section>
+      </div>
+      <div className="mx-auto">
+        <section>
+          <span className="block text-center font-extralight text-2xl">Connect to room</span>
+          <form onSubmit={handleConnectParty}>
+            <input
+              type="text"
+              placeholder="Code room"
+              onChange={handleInput}
+              className="block"
+            />
+            <Button text="Let's go!" type="submit"></Button>
+          </form>
+        </section>
+      </div>
+    </div>
   );
 }
 

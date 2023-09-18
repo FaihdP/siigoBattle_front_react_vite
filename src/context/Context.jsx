@@ -4,7 +4,12 @@ import User from "../logic/classes/User";
 
 export const Context = createContext();
 
-const connectionSocket = io("http://localhost:4000")
+const socketIOOpts = {
+  transports: ["websocket"],
+  reconnection: false
+};
+
+const connectionSocket = io("http://localhost:4000", socketIOOpts);
 
 export function ContextProvider({ children }) {
   let [user, setUser] = useState(new User());
